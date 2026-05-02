@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google TPUs 01 &mdash; History &amp; People</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a; --bg-card: #0d1117; --bg-code: #161b22;
+            --text-primary: #e6edf3; --text-secondary: #8b949e;
+            --accent: #4285F4; --accent-dim: #4285F444; --accent-glow: #4285F433;
+            --accent-2: #EA4335; --accent-3: #FBBC04; --accent-4: #34A853;
+            --border: #21262d;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-body: 'Inter', sans-serif;
+            --max-width: 900px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); font-size: 17px; line-height: 1.7; overflow-x: hidden; }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem 1.5rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 700px; height: 600px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+        .hero > * { position: relative; z-index: 1; }
+        .series-label { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 1rem; }
+        .hero h1 .accent { color: var(--accent); }
+        .hero .subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 640px; margin-bottom: 2rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2.5rem; }
+        .tag { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); background: var(--accent-dim); white-space: nowrap; }
+        .pipeline { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.25rem; margin-bottom: 1rem; max-width: var(--max-width); }
+        .pipeline-step { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.3rem 0.7rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-secondary); white-space: nowrap; }
+        .pipeline-arrow { color: var(--accent); font-size: 0.9rem; font-weight: 700; }
+        .slide { min-height: 100vh; max-width: var(--max-width); margin: 0 auto; padding: 4rem 1.5rem; position: relative; display: flex; flex-direction: column; justify-content: center; }
+        .slide-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--accent-dim); position: absolute; top: 2rem; right: 1.5rem; line-height: 1; user-select: none; }
+        .slide h2 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; line-height: 1.25; }
+        .slide h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .slide p { margin-bottom: 1rem; color: var(--text-secondary); }
+        .slide p strong { color: var(--text-primary); }
+        .slide ul, .slide ol { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--text-secondary); }
+        .slide li { margin-bottom: 0.4rem; }
+        .slide li strong { color: var(--text-primary); }
+        .table-wrap { overflow-x: auto; margin: 1.25rem 0; border-radius: 8px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: var(--bg-code); color: var(--accent); font-weight: 600; text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-family: var(--font-display); white-space: nowrap; }
+        td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(13, 17, 23, 0.5); }
+        .diagram-grid { display: grid; gap: 0.75rem; margin: 1.5rem 0; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+        .diagram-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+        .diagram-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .diagram-panel { padding: 1rem; background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; }
+        .diagram-panel.accent-border { border-left: 3px solid var(--accent); }
+        .diagram-panel.r { border-left: 3px solid var(--accent-2); }
+        .diagram-panel.y { border-left: 3px solid var(--accent-3); }
+        .diagram-panel.g { border-left: 3px solid var(--accent-4); }
+        .diagram-panel h4 { font-family: var(--font-display); font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .diagram-panel.r h4 { color: var(--accent-2); }
+        .diagram-panel.y h4 { color: var(--accent-3); }
+        .diagram-panel.g h4 { color: var(--accent-4); }
+        .diagram-panel p, .diagram-panel ul { font-size: 0.9rem; }
+        .callout { background: var(--bg-card); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+        .callout p { margin-bottom: 0; }
+        .callout .callout-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+        .callout.r { border-left-color: var(--accent-2); }
+        .callout.r .callout-label { color: var(--accent-2); }
+        .quote { font-family: var(--font-display); font-size: 1.15rem; font-style: italic; color: var(--text-primary); padding: 1rem 1.5rem; border-left: 3px solid var(--accent); background: var(--bg-card); margin: 1.25rem 0; border-radius: 0 8px 8px 0; }
+        .quote .attr { display: block; margin-top: 0.5rem; font-style: normal; font-size: 0.85rem; color: var(--text-secondary); font-family: var(--font-mono); }
+        .timeline { display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem 0; }
+        .tl-row { display: flex; gap: 1rem; align-items: flex-start; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+        .tl-year { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); min-width: 90px; padding-top: 0.1rem; }
+        .tl-event { flex: 1; }
+        .tl-event strong { color: var(--text-primary); }
+        .tl-event p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+        .contents-list { list-style: none; padding-left: 0; counter-reset: contents; }
+        .contents-list li { counter-increment: contents; padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+        .contents-list li:last-child { border-bottom: none; }
+        .contents-list li::before { content: counter(contents, decimal-leading-zero); font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); min-width: 2rem; }
+        .contents-list a { color: var(--text-primary); text-decoration: none; }
+        .contents-list a:hover { color: var(--accent); }
+        .footer { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); font-size: 0.85rem; border-top: 1px solid var(--border); max-width: var(--max-width); margin: 0 auto; }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .canvas-wrap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin: 1.25rem 0; overflow-x: auto; }
+        .canvas-wrap canvas, .canvas-wrap svg { display: block; margin: 0 auto; max-width: 100%; }
+        .person-card { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; padding: 1rem; background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.6rem; }
+        .person-photo { width: 90px; height: 90px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--accent); }
+        .person-card h4 { font-family: var(--font-display); margin-bottom: 0.2rem; color: var(--text-primary); }
+        .person-card .role { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+        .person-card p { font-size: 0.88rem; margin: 0; }
+        @media (max-width: 640px) {
+            .slide { padding: 3rem 1rem; min-height: auto; }
+            .slide-number { font-size: 3rem; top: 1.5rem; right: 1rem; }
+            .slide h2 { font-size: 1.5rem; }
+            .diagram-grid.cols-2, .diagram-grid.cols-3 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            table { font-size: 0.78rem; }
+            .person-card { grid-template-columns: 60px 1fr; }
+            .person-photo { width: 60px; height: 60px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="series-label">Google TPUs Series &mdash; Presentation 01</div>
+    <h1>How the <span class="accent">TPU Programme</span> Began &mdash; History &amp; People</h1>
+    <p class="subtitle">A custom AI ASIC was a strange thing for a search company to build in 2013. The story of how Google did it in 15 months &mdash; and the architects who knew, from forty years of computer-architecture history, that it would work.</p>
+
+    <div class="tags">
+        <span class="tag">2013</span><span class="tag">Norm Jouppi</span><span class="tag">David Patterson</span>
+        <span class="tag">Jeff Dean</span><span class="tag">AlphaGo</span><span class="tag">ISCA 2017</span>
+    </div>
+
+    <div class="pipeline">
+        <span class="pipeline-step">Voice projection</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Project start (2013)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Silicon (2015)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">AlphaGo (Mar 2016)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">I/O announce (May 2016)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">ISCA paper (Jun 2017)</span>
+    </div>
+</header>
+
+<section class="slide" id="slide-00">
+    <div class="slide-number">00</div>
+    <h2>What This Deck Covers</h2>
+    <p>The TPU is one of the small handful of clean-sheet datacenter ASICs to ever reach genuine industrial scale. Understanding how it got there is half history, half computer-architecture lineage. We'll cover both.</p>
+    <ul class="contents-list">
+        <li><a href="#slide-01">The 2013 Voice-Search Projection</a></li>
+        <li><a href="#slide-02">Why Build an ASIC At All?</a></li>
+        <li><a href="#slide-03">The Architect &mdash; Norm Jouppi's Career Arc</a></li>
+        <li><a href="#slide-04">The Other Names That Matter</a></li>
+        <li><a href="#slide-05">15 Months From Spec to Datacenter</a></li>
+        <li><a href="#slide-06">AlphaGo &mdash; The First Public Workload</a></li>
+        <li><a href="#slide-07">The May 2016 Announcement</a></li>
+        <li><a href="#slide-08">The Three Landmark Papers</a></li>
+        <li><a href="#slide-09">From v1 to a Programme</a></li>
+        <li><a href="#slide-10">Why It Worked &mdash; The Architectural Lineage</a></li>
+        <li><a href="#slide-11">Interactive Timeline</a></li>
+        <li><a href="#slide-12">Cheat Sheet</a></li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-01">
+    <div class="slide-number">01</div>
+    <h2>The 2013 Voice-Search Projection</h2>
+    <p>The TPU project does not start with a chip designer. It starts with a back-of-the-napkin calculation by <strong>Jeff Dean</strong> &mdash; Google's Senior Fellow, Google Brain co-founder, and the engineer most responsible for the architecture of Google search itself.</p>
+
+    <p>Speech recognition had just made the jump from Hidden Markov Models to deep neural networks. Voice search worked, and was about to become a default Android feature. Dean ran the obvious extrapolation:</p>
+
+    <div class="quote">
+        If hundreds of millions of people talked to Google for just three minutes a day via voice search, we'd need to double the number of computers in our datacenters.
+        <span class="attr">&mdash; Jeff Dean (paraphrased; widely repeated, Google's own retellings)</span>
+    </div>
+
+    <p>"Double the datacenters" is not a feature request. It is a structural problem. Google's existing fleet of CPU-and-GPU machines was already planet-scale. You cannot solve it with another procurement cycle; you have to change the per-query economics of inference.</p>
+
+    <p>That is the moment a custom ASIC stops being exotic and starts being the cheapest option on the table.</p>
+
+    <div class="callout">
+        <div class="callout-label">Why this number is the right number to start with</div>
+        <p>The TPU isn't justified by training cost. It's justified by <strong>inference cost at fleet scale</strong>. Training is a fixed expense per model; inference is paid per query, every day, forever. The voice projection was the first time anyone at Google did the accounting at fleet scale and concluded that the answer was a new kind of silicon.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-02">
+    <div class="slide-number">02</div>
+    <h2>Why Build an ASIC At All?</h2>
+    <p>In 2013 the conventional answer to "Google needs more ML throughput" was either more Xeon servers or more NVIDIA GPUs. Both options were available. Both were rejected. Why?</p>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>What CPUs gave you in 2013</h4>
+            <ul>
+                <li>Xeon Ivy Bridge / Haswell &mdash; about <strong>200 GFLOPS FP32</strong> per socket, ~150 W.</li>
+                <li>General-purpose &mdash; pays for branch predictors, out-of-order, large caches, all dark silicon for matmul.</li>
+                <li>Software flexibility was great; <strong>perf/W on dense matmul was ~0.3 GFLOPS/W</strong>.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel g">
+            <h4>What GPUs gave you in 2013</h4>
+            <ul>
+                <li>NVIDIA Kepler K20/K40 &mdash; ~3.5&nbsp;TFLOPS FP32, 235&nbsp;W. <strong>~15 GFLOPS/W</strong>.</li>
+                <li>Tensor cores didn't exist yet (those arrive with Volta in 2017).</li>
+                <li>Best perf/W in the industry, but built for graphics first &mdash; rasterisers, ROPs, RT pipelines, heavy register files.</li>
+                <li>Single-vendor supply; pricing reflects that.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>The ASIC arithmetic</h3>
+    <p>If you remove everything from a GPU that isn't doing 8-bit multiply-accumulate, you free a startling amount of die for actual MACs. Google's projection said an ASIC could deliver <strong>30&times; better perf/W than a contemporary GPU</strong> on the inference workloads Google actually ran &mdash; and the ISCA 2017 paper's measured numbers (15&ndash;30&times; perf, 30&ndash;80&times; perf/W vs Haswell and K80) bore that out.</p>
+
+    <div class="callout">
+        <div class="callout-label">Domain-specific architecture</div>
+        <p>This is the moment the term <em>domain-specific architecture</em> (DSA) starts to matter at hyperscale. Patterson and Hennessy's 2017 Turing-lecture paper "A New Golden Age for Computer Architecture" uses the TPU as the canonical example: <strong>when Moore's-law and Dennard scaling slow, the way out is specialised silicon for the workloads that dominate your fleet</strong>. Google's fleet was dominated by inference of a small set of model topologies. That's the ideal DSA target.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-03">
+    <div class="slide-number">03</div>
+    <h2>The Architect &mdash; Norm Jouppi's Career Arc</h2>
+    <p>You cannot understand the TPU without understanding the person who designed it. Norm Jouppi's career is a forty-year survey of every memory-hierarchy and microarchitecture lesson ever learned in industry.</p>
+
+    <div class="person-card">
+        <div class="person-photo">NJ</div>
+        <div>
+            <h4>Norman P. Jouppi</h4>
+            <div class="role">TPU Lead Architect &middot; Google Distinguished Hardware Engineer</div>
+            <p>PhD Stanford 1984 under <strong>John Hennessy</strong> &mdash; an original architect on the <strong>Stanford MIPS</strong> RISC project that defined modern processor design. Joined Google in 2011; tech-led the TPU programme from inception in 2013.</p>
+        </div>
+    </div>
+
+    <h3>The MIPS lesson &mdash; "compiler does the scheduling"</h3>
+    <p>MIPS was the first commercial processor built on the explicit principle that <em>the compiler, not the hardware, should schedule instructions</em>. No out-of-order, no aggressive branch predictor &mdash; just a simple pipeline and a smart compiler. That philosophy was unfashionable for two decades while Intel made out-of-order superscalar work brilliantly. It became fashionable again the moment dark silicon and power constraints made hardware-side dynamic scheduling untenable. <strong>The TPU is a MIPS-philosophy machine.</strong> The XLA compiler does the scheduling that an Intel core does in hardware.</p>
+
+    <h3>The DEC WRL years &mdash; memory hierarchy obsession</h3>
+    <p>1984 to 1996, Jouppi was at Digital's Western Research Lab. His papers from that era include some of the most cited microarchitecture work ever written:</p>
+    <ul>
+        <li><strong>Victim caches</strong> (1990) &mdash; small fully-associative buffer to absorb conflict misses; a standard piece of CPU design ever since.</li>
+        <li><strong>Stream buffers</strong> (1990) &mdash; software-visible prefetch hardware. The intellectual ancestor of the TPU's explicit DMA-and-VMEM model.</li>
+        <li><strong>CACTI</strong> (1996) &mdash; a cache and SRAM modelling tool every chip designer in the world has used. Lets you do quantitative die-area / latency / bandwidth tradeoffs without taping out.</li>
+    </ul>
+
+    <h3>HP Labs &mdash; Fellow, Director, Eckert&ndash;Mauchly Award</h3>
+    <p>1996 to 2011 at Compaq/HP Labs, ending as HP Fellow running the Intelligent Infrastructure Lab. Eckert&ndash;Mauchly Award 2015 (the IEEE/ACM career achievement prize for computer architecture) for "contributions to the design and analysis of high performance processors and computer storage systems".</p>
+
+    <div class="callout">
+        <div class="callout-label">What he carried into the TPU</div>
+        <p>Three habits show up directly in the TPU v1 design: (1) <strong>compiler does the scheduling</strong> (no OoO, no branch predictor, ~12-instruction CISC ISA); (2) <strong>quantitative memory-hierarchy analysis</strong> (the ISCA 2017 paper has a roofline plot that is pure CACTI-era thinking); (3) <strong>conservative, deeply-thought silicon choices</strong> &mdash; Jouppi's reputation is for shipping; the TPU went from spec to datacenter in 15 months.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-04">
+    <div class="slide-number">04</div>
+    <h2>The Other Names That Matter</h2>
+    <p>The ISCA 2017 TPU paper has <strong>seventy-five authors</strong>. A custom ASIC at this scale is a team sport. A few names worth knowing:</p>
+
+    <div class="person-card">
+        <div class="person-photo">DP</div>
+        <div>
+            <h4>David A. Patterson</h4>
+            <div class="role">Co-architect &middot; Distinguished Engineer (joined Google ~2016)</div>
+            <p>Berkeley RISC pioneer; co-author of <em>Computer Architecture: A Quantitative Approach</em>; <strong>2017 Turing Award</strong> (with Hennessy). Joined Google specifically because of the TPU programme. Co-author on the ISCA 2017, CACM 2020 (v2/v3), and ISCA 2023 (v4) papers. Public face of the "domain-specific architecture" framing.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">JD</div>
+        <div>
+            <h4>Jeff Dean</h4>
+            <div class="role">Project sponsor &middot; Senior Fellow &middot; Google Brain co-founder</div>
+            <p>The voice-search projection was his. Co-founded Google Brain (2011) with Andrew Ng and Greg Corrado; pushed for and underwrote the TPU programme internally. Co-author on ISCA 2017. More recently: lead author on the <em>Pathways</em> system that orchestrates pod-spanning training.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">CY</div>
+        <div>
+            <h4>Cliff Young</h4>
+            <div class="role">Co-architect &middot; Google Brain hardware</div>
+            <p>Co-author on all three landmark TPU papers (2017, 2020, 2023). Earlier work at Bell Labs and D. E. Shaw Research's <em>Anton</em> molecular-dynamics ASIC &mdash; another high-profile clean-sheet datacenter chip. The Anton experience shows up in TPU's deterministic, statically-scheduled approach.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">JR</div>
+        <div>
+            <h4>Jonathan Ross</h4>
+            <div class="role">Original team &middot; later Groq founder &amp; CEO</div>
+            <p>One of the engineers on the original TPU team. Left in 2016 to found <strong>Groq</strong>, whose deterministic-VLIW LPU is &mdash; very deliberately &mdash; an attempt to take the TPU's static-scheduling philosophy further still. Half of the post-2016 ML-accelerator startup wave is, in some sense, alumni of this team.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">AS</div>
+        <div>
+            <h4>Andy Swing &amp; the systems team</h4>
+            <div class="role">Co-architect, ISCA 2017 &amp; ISCA 2023</div>
+            <p>Lead engineer on board / cooling / system integration. The names that do not headline papers but design the boards, the SerDes, the OCS optical switch (Palomar, ISCA 2023), and the Jupiter datacenter network the pods sit in.</p>
+        </div>
+    </div>
+
+    <div class="callout">
+        <div class="callout-label">Note on the Quoc Le myth</div>
+        <p>Quoc Le, the Brain co-founder famous for the "neural cat detector", is sometimes credited with the TPU. He is not on any of the TPU papers and was not on the hardware team &mdash; he is on the ML-research side that <em>motivated</em> the chip. Worth being precise: TPU = a hardware-team artefact, prompted by a Brain-team need.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-05">
+    <div class="slide-number">05</div>
+    <h2>15 Months From Spec to Datacenter</h2>
+    <p>The most surprising number in the entire TPU story is the schedule. The May 2016 Cloud blog post by Jouppi, written immediately after the public announcement, gives the only numbers Google has ever published on the design cycle:</p>
+
+    <div class="quote">
+        We've been running TPUs inside our data centers for more than a year, and have found them to deliver an order of magnitude better-optimized performance per watt for machine learning. &hellip; The first tested silicon was deployed in our datacenters within 22 days.
+        <span class="attr">&mdash; Norm Jouppi, Google Cloud Blog, 19 May 2016</span>
+    </div>
+
+    <h3>The implied timeline</h3>
+    <div class="timeline">
+        <div class="tl-row"><div class="tl-year">~2013 Q3</div><div class="tl-event"><strong>Project kickoff.</strong><p>Jouppi's team starts the architecture work after the voice-search projection lands.</p></div></div>
+        <div class="tl-row"><div class="tl-year">2014</div><div class="tl-event"><strong>RTL, verification, layout.</strong><p>~12 months of design. A 28&nbsp;nm tape-out at TSMC; very deliberate process choice (mature, cheap, predictable).</p></div></div>
+        <div class="tl-row"><div class="tl-year">2015 mid</div><div class="tl-event"><strong>First silicon back from fab.</strong><p>22 days from "tested silicon" to a card running production inference workloads in a Google datacenter.</p></div></div>
+        <div class="tl-row"><div class="tl-year">2015 H2</div><div class="tl-event"><strong>Datacenter rollout.</strong><p>By late 2015 TPUs are running RankBrain, Translate, Photos and Street View at meaningful scale. None of this is public yet.</p></div></div>
+        <div class="tl-row"><div class="tl-year">2016 Q1</div><div class="tl-event"><strong>AlphaGo on TPU.</strong><p>The Lee Sedol match in Seoul (9&ndash;15 March) is served on TPU v1.</p></div></div>
+        <div class="tl-row"><div class="tl-year">2016-05-19</div><div class="tl-event"><strong>Public announcement.</strong><p>Sundar Pichai keynote at Google I/O; Jouppi's blog post the same day.</p></div></div>
+    </div>
+
+    <p>For comparison: a typical big-vendor AI accelerator from spec to general availability is closer to <strong>3&ndash;4 years</strong>. NVIDIA's Volta announcement (March 2017) traces back to architecture work started around 2013. The TPU did the same job &mdash; and shipped to a production datacenter &mdash; in less than half the time.</p>
+
+    <div class="callout">
+        <div class="callout-label">How is that even possible?</div>
+        <p>Three structural choices made it work. <strong>(1) Mature node:</strong> 28&nbsp;nm in 2014 was three years old &mdash; tooling and yields were boring and predictable. <strong>(2) Minimal ISA:</strong> ~12 CISC instructions, no caches, no branch predictor. There simply isn't much to verify. <strong>(3) Drop-in form factor:</strong> a PCIe Gen3 &times;16 card. No new server, no new datacenter, no new power infrastructure &mdash; just slot it next to the existing fleet.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-06">
+    <div class="slide-number">06</div>
+    <h2>AlphaGo &mdash; The First Public Workload</h2>
+    <p>The first the world heard of the TPU was not from a chip launch but from a Go match. AlphaGo's 4&ndash;1 victory over Lee Sedol in Seoul in March 2016 was, for most observers, the first time deep learning seemed obviously transformative. The chip running it was a TPU v1.</p>
+
+    <div class="quote">
+        AlphaGo was powered by TPUs in the matches against Go world champion, Lee Sedol, enabling it to "think" much faster and look farther ahead between moves.
+        <span class="attr">&mdash; Norm Jouppi, Google Cloud Blog, 19 May 2016 (the announcement)</span>
+    </div>
+
+    <h3>What's true and what's not in the AlphaGo retellings</h3>
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel g">
+            <h4>True</h4>
+            <ul>
+                <li>The Lee Sedol match (March 2016) ran on TPU v1.</li>
+                <li>Internal head-to-head play during 2015&ndash;16 had AlphaGo-on-TPU beating AlphaGo-on-GPU something like 80% of the time at fixed time controls.</li>
+                <li>The match was the first large-scale public-facing TPU deployment.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel r">
+            <h4>Not true (or unclear)</h4>
+            <ul>
+                <li>"AlphaGo used 1,202 CPUs and 176 GPUs" &mdash; that figure is from the <em>Fan Hui</em> match (October 2015), described in the January 2016 Nature paper. It is <strong>not</strong> the Lee Sedol setup.</li>
+                <li>The exact TPU count for Seoul was not published. Trade-press estimates of "48&nbsp;TPUs" or similar are unsourced.</li>
+                <li>AlphaGo training did not happen on TPU v1 &mdash; v1 is inference-only. Training used GPU clusters.</li>
+            </ul>
+        </div>
+    </div>
+
+    <p>The Lee Sedol match mattered for the TPU programme in a way that no benchmark plot could. It gave Google leadership a public-facing proof that custom silicon for ML was a strategic capability, not a research curiosity. Every TPU generation since traces, in budget terms, back to that match.</p>
+</section>
+
+<section class="slide" id="slide-07">
+    <div class="slide-number">07</div>
+    <h2>The May 2016 Announcement</h2>
+    <p>On 19 May 2016 at Google I/O, Sundar Pichai announced the TPU on stage. Jouppi's accompanying Cloud blog post, posted the same day, is still the cleanest first-principles description of the chip in public. It led with one specific number:</p>
+
+    <div class="quote">
+        TPUs deliver an order of magnitude better-optimised performance per watt for machine learning. This is roughly equivalent to fast-forwarding technology about seven years into the future (three generations of Moore's Law).
+        <span class="attr">&mdash; Norm Jouppi, Google Cloud Blog, 19 May 2016</span>
+    </div>
+
+    <h3>What was disclosed in May 2016</h3>
+    <ul>
+        <li>The chip exists, has been deployed for "more than a year".</li>
+        <li>It is an ASIC tailored for TensorFlow inference.</li>
+        <li>It is integrated as a PCIe accelerator in standard server racks.</li>
+        <li>10&times; perf/W vs contemporary processors.</li>
+        <li>It runs RankBrain, Street View, voice, AlphaGo.</li>
+    </ul>
+
+    <h3>What was held back</h3>
+    <ul>
+        <li>The systolic array dimensions (256&times;256) and MAC count.</li>
+        <li>The numeric format (8-bit integer).</li>
+        <li>The memory hierarchy and DRAM choice.</li>
+        <li>That training was already in design as a separate chip.</li>
+    </ul>
+
+    <p>Those details would arrive thirteen months later in the ISCA 2017 paper &mdash; the first peer-reviewed disclosure of a hyperscaler's production AI ASIC.</p>
+
+    <div class="callout">
+        <div class="callout-label">Why announce the chip at all?</div>
+        <p>Google's previous datacenter custom silicon &mdash; the network-switch ASICs of Jupiter, the storage-controller chips &mdash; was never publicised. The TPU was. Two reasons: (1) <strong>recruiting</strong> &mdash; chip architects want to know their work will be seen; an entire generation of ML-hardware talent moved to Google after this announcement; (2) <strong>cloud strategy</strong> &mdash; Google Cloud was being framed as the place to run TensorFlow, and the TPU was the differentiator. The chip is now sold by the hour as <em>Cloud TPU</em>.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-08">
+    <div class="slide-number">08</div>
+    <h2>The Three Landmark Papers</h2>
+    <p>If you only read three TPU papers, read these three. Together they cover the entire programme.</p>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Paper</th><th>Venue</th><th>Year</th><th>What it covers</th></tr></thead>
+            <tbody>
+                <tr><td><strong>In-Datacenter Performance Analysis of a Tensor Processing Unit</strong><br>Jouppi, Young, Patil, Patterson &hellip; (75 authors)</td><td>ISCA</td><td>2017</td><td>The TPU v1 disclosure paper. 28&nbsp;nm, 256&times;256 INT8 systolic, 92 TOPS, 28 W typical, 40 W max. Roofline analysis showing v1 was memory-bandwidth-bound &mdash; the lesson that motivated HBM in v2.</td></tr>
+                <tr><td><strong>A Domain-Specific Supercomputer for Training Deep Neural Networks</strong><br>Jouppi, Yoon, Kurian, Li, Patil, Laudon, Young, Patterson</td><td>CACM</td><td>2020</td><td>TPU v2 and v3. Why training needed a new chip (no FP, no gradients in v1). bfloat16, two TensorCores per chip, 2D-torus pod, ICI custom interconnect.</td></tr>
+                <tr><td><strong>TPU v4: An Optically Reconfigurable Supercomputer for ML with Hardware Support for Embeddings</strong><br>Jouppi, Kurian, Li, &hellip; Patterson</td><td>ISCA</td><td>2023</td><td>The 4096-chip v4 pod. 7&nbsp;nm, 3D torus, the <em>Palomar</em> 3D-MEMS optical circuit switch, SparseCore for embeddings. The "ML supercomputer" framing.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Important supporting papers</h3>
+    <ul>
+        <li><strong>ISCA 2021</strong> &mdash; Jouppi et al., <em>"Ten Lessons From Three Generations Shaped Google's TPUv4i"</em>. The inference-focused sibling of v4. CMEM is introduced here.</li>
+        <li><strong>MLSys 2022</strong> &mdash; Barham, Dean, Ghemawat et al., <em>"Pathways: Asynchronous Distributed Dataflow for ML"</em>. The orchestration system that made multi-pod training of PaLM (6,144 chips) possible.</li>
+        <li><strong>arXiv 2208.10041 (2022)</strong> &mdash; <em>"Mission Apollo &mdash; OCS at Datacenter Scale"</em>. How OCS scaled out beyond a single TPU pod into Jupiter.</li>
+        <li><strong>CACM 2019 Turing lecture</strong> &mdash; Hennessy &amp; Patterson, <em>"A New Golden Age for Computer Architecture"</em>. The intellectual frame: domain-specific architectures are the way out of the post-Dennard slowdown.</li>
+    </ul>
+
+    <div class="callout">
+        <div class="callout-label">The pattern is unusual</div>
+        <p>Google publishes the TPU. AWS does not publish Trainium / Inferentia in any comparable depth. Microsoft has not published Maia. Meta's MTIA has a paper but nothing like the level of detail. This is partly a Patterson legacy &mdash; an academic culture inside Google's hardware org &mdash; and partly recruiting. The papers are also how the rest of the industry has learned that a custom AI ASIC at hyperscale actually <em>works</em>.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-09">
+    <div class="slide-number">09</div>
+    <h2>From v1 to a Programme</h2>
+    <p>What started as a one-off inference chip in 2015 has become a continuous decade-long silicon programme. The cadence has been roughly <strong>one new chip every 18&ndash;24 months</strong>, and from v5 onward, two SKUs per generation.</p>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Generation</th><th>Year</th><th>Role</th><th>Key innovation</th></tr></thead>
+            <tbody>
+                <tr><td><strong>v1</strong></td><td>2015</td><td>Inference</td><td>256&times;256 INT8 systolic; 92 TOPS at 40 W</td></tr>
+                <tr><td><strong>v2</strong></td><td>2017</td><td>Training</td><td>bfloat16, HBM, 2D torus pod, two TensorCores per chip</td></tr>
+                <tr><td><strong>v3</strong></td><td>2018</td><td>Training (refresh)</td><td>4 MXUs/chip, 32 GiB HBM, liquid cooling</td></tr>
+                <tr><td><strong>v4</strong></td><td>2020 (announced 2021)</td><td>Training flagship</td><td>7&nbsp;nm, 3D torus, Palomar OCS, SparseCore, CMEM</td></tr>
+                <tr><td><strong>v4i</strong></td><td>2020</td><td>Inference</td><td>Single-core variant of v4 for fleet inference</td></tr>
+                <tr><td><strong>v5e</strong></td><td>Aug 2023</td><td>Cost-optimised</td><td>The "e-class" inference / small-training chip</td></tr>
+                <tr><td><strong>v5p</strong></td><td>Dec 2023</td><td>Training flagship</td><td>95 GiB HBM, 8,960-chip pod, Gemini 1/1.5 training</td></tr>
+                <tr><td><strong>Trillium (v6e)</strong></td><td>May 2024 / GA Dec 2024</td><td>Cost-optimised</td><td>4.7&times; v5e compute, 3rd-gen SparseCore</td></tr>
+                <tr><td><strong>Ironwood (v7 / TPU7x)</strong></td><td>Apr 2025 / GA Nov 2025</td><td>Inference flagship</td><td>4.6 PFLOPS FP8, 192 GiB HBM3e, 9,216-chip pod</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>The product fork &mdash; e-class (efficient) and p-class (performance) &mdash; is itself a strategic decision. It mirrors NVIDIA's split between consumer (RTX) and datacenter (HGX) lines, but at much smaller silicon scale: same architecture team, same software stack, two SKUs.</p>
+
+    <div class="callout">
+        <div class="callout-label">A programme, not a chip</div>
+        <p>The "TPU" you read about today is a continuous lineage of decisions: 28&nbsp;nm INT8 inference (v1) &rarr; 16&nbsp;nm bf16 training (v2/v3) &rarr; 7&nbsp;nm pod-scale training with optical interconnect (v4) &rarr; FP8 inference at 192 GiB per chip (v7). Every generation is a response to what the previous one couldn't do. The <em>shape</em> of the chip changes; the philosophy &mdash; statically scheduled, compiler-driven, scratchpad memory, systolic core &mdash; does not.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-10">
+    <div class="slide-number">10</div>
+    <h2>Why It Worked &mdash; The Architectural Lineage</h2>
+    <p>The TPU is sometimes presented as a clean-sheet design. It is not. It is a synthesis of three decades of architecture research that happened to find its first hyperscale application in deep learning.</p>
+
+    <div class="diagram-grid cols-3">
+        <div class="diagram-panel accent-border">
+            <h4>From RISC / MIPS</h4>
+            <ul>
+                <li>Compiler does the scheduling.</li>
+                <li>Simple, regular ISA.</li>
+                <li>No out-of-order, no branch predictor.</li>
+                <li>Make the simple case fast and the complex case the compiler's problem.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel y">
+            <h4>From systolic arrays</h4>
+            <ul>
+                <li>Kung &amp; Leiserson, <strong>1978/79</strong>.</li>
+                <li>"Why Systolic Architectures?" Kung 1982.</li>
+                <li>Local communication, regular dataflow, perfect VLSI fit.</li>
+                <li>CMU Warp / Intel iWarp prefigured the matmul array.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel g">
+            <h4>From DEC WRL memory hierarchy</h4>
+            <ul>
+                <li>Software-managed scratchpads, not opaque caches.</li>
+                <li>Explicit prefetch (stream buffers).</li>
+                <li>Quantitative bandwidth analysis (CACTI).</li>
+                <li>Roofline thinking baked into the design loop.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>And the workload finally cooperated</h3>
+    <p>For decades after Kung &amp; Leiserson there was no real workload that wanted a 65,536-MAC systolic array. Signal processing was too small, scientific computing too irregular. Deep learning &mdash; the moment it became a sequence of dense matmuls on small batches of low-precision integers &mdash; was the first workload in history that <strong>fit the shape</strong>. The TPU is the chip those three lineages were waiting for.</p>
+
+    <div class="callout">
+        <div class="callout-label">The Patterson framing</div>
+        <p>In Hennessy and Patterson's 2018 Turing lecture they call this the <em>"new golden age for computer architecture"</em>: post-Dennard scaling, you can no longer get free perf/W from process; you have to pay for it with specialisation. The TPU is the canonical example. The cost is portability &mdash; a TPU only runs ML workloads &mdash; and the payoff is one to two orders of magnitude in perf/W on those workloads. Every hyperscaler now has its own version of this argument and its own chip.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-11">
+    <div class="slide-number">11</div>
+    <h2>Interactive Timeline</h2>
+    <p>Click a milestone to see what was happening at Google, in the broader ML world, and on the TPU programme that month. Use this to anchor your mental model: most LLM headlines you remember have a TPU silicon decision sitting underneath them by 6&ndash;18 months.</p>
+
+    <div class="canvas-wrap">
+        <svg id="tl-svg" viewBox="0 0 860 360" width="860" height="360" xmlns="http://www.w3.org/2000/svg">
+            <style>
+                .ax { stroke: #21262d; stroke-width: 1; }
+                .gr { stroke: #161b22; stroke-dasharray: 2,3; }
+                .yr { fill: #8b949e; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+                .lbl { fill: #e6edf3; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+                .dot { cursor: pointer; transition: r 0.15s; }
+                .dot:hover { r: 8; }
+                .dot.tpu { fill: #4285F4; stroke: #4285F4; }
+                .dot.ml  { fill: #FBBC04; stroke: #FBBC04; }
+                .dot.goog{ fill: #34A853; stroke: #34A853; }
+                .legend { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: #e6edf3; }
+            </style>
+            <!-- axis -->
+            <line x1="40" y1="320" x2="820" y2="320" class="ax"/>
+            <!-- year ticks: 2013..2026 = 14 years over 780 px = 60 px/year -->
+            <g class="yr">
+                <text x="40"  y="338" text-anchor="middle">2013</text>
+                <text x="100" y="338" text-anchor="middle">2014</text>
+                <text x="160" y="338" text-anchor="middle">2015</text>
+                <text x="220" y="338" text-anchor="middle">2016</text>
+                <text x="280" y="338" text-anchor="middle">2017</text>
+                <text x="340" y="338" text-anchor="middle">2018</text>
+                <text x="400" y="338" text-anchor="middle">2019</text>
+                <text x="460" y="338" text-anchor="middle">2020</text>
+                <text x="520" y="338" text-anchor="middle">2021</text>
+                <text x="580" y="338" text-anchor="middle">2022</text>
+                <text x="640" y="338" text-anchor="middle">2023</text>
+                <text x="700" y="338" text-anchor="middle">2024</text>
+                <text x="760" y="338" text-anchor="middle">2025</text>
+                <text x="820" y="338" text-anchor="middle">2026</text>
+            </g>
+            <!-- gridlines -->
+            <line x1="100" y1="40" x2="100" y2="320" class="gr"/>
+            <line x1="160" y1="40" x2="160" y2="320" class="gr"/>
+            <line x1="220" y1="40" x2="220" y2="320" class="gr"/>
+            <line x1="280" y1="40" x2="280" y2="320" class="gr"/>
+            <line x1="340" y1="40" x2="340" y2="320" class="gr"/>
+            <line x1="400" y1="40" x2="400" y2="320" class="gr"/>
+            <line x1="460" y1="40" x2="460" y2="320" class="gr"/>
+            <line x1="520" y1="40" x2="520" y2="320" class="gr"/>
+            <line x1="580" y1="40" x2="580" y2="320" class="gr"/>
+            <line x1="640" y1="40" x2="640" y2="320" class="gr"/>
+            <line x1="700" y1="40" x2="700" y2="320" class="gr"/>
+            <line x1="760" y1="40" x2="760" y2="320" class="gr"/>
+            <!-- legend -->
+            <circle cx="60" cy="22" r="5" class="dot tpu"/><text x="72" y="26" class="legend">TPU programme</text>
+            <circle cx="240" cy="22" r="5" class="dot ml"/><text x="252" y="26" class="legend">ML / model events</text>
+            <circle cx="450" cy="22" r="5" class="dot goog"/><text x="462" y="26" class="legend">Google papers / talks</text>
+            <!-- TPU programme dots y=80 -->
+            <circle cx="40"  cy="80" r="6" class="dot tpu" data-info="Q3 2013 — TPU project starts. Jouppi recruits the architecture team after Jeff Dean's voice-search projection."/>
+            <circle cx="160" cy="80" r="6" class="dot tpu" data-info="Mid 2015 — First TPU v1 silicon back from TSMC at 28 nm. 22 days later it's running production inference."/>
+            <circle cx="225" cy="80" r="6" class="dot tpu" data-info="May 2016 — Public TPU announcement at Google I/O by Sundar Pichai; Jouppi's blog post the same day."/>
+            <circle cx="300" cy="80" r="6" class="dot tpu" data-info="May 2017 — TPU v2 announced. First Google chip with HBM and bfloat16; 256-chip pod, 2D torus."/>
+            <circle cx="345" cy="80" r="6" class="dot tpu" data-info="May 2018 — TPU v3 announced. 1024-chip pod, liquid cooling, 32 GiB HBM."/>
+            <circle cx="525" cy="80" r="6" class="dot tpu" data-info="May 2021 — TPU v4 announced (deployed 2020). 7 nm, 4096-chip 3D torus, Palomar OCS, SparseCore."/>
+            <circle cx="640" cy="80" r="6" class="dot tpu" data-info="Aug 2023 — TPU v5e GA. Cost-optimised, 256-chip 2D-torus pod."/>
+            <circle cx="660" cy="80" r="6" class="dot tpu" data-info="Dec 2023 — TPU v5p announced. 8960-chip 3D-torus pod, the chip Gemini 1.5 trains on."/>
+            <circle cx="710" cy="80" r="6" class="dot tpu" data-info="May 2024 — Trillium (TPU v6e) announced; GA December 2024. 4.7× v5e."/>
+            <circle cx="765" cy="80" r="6" class="dot tpu" data-info="Apr 2025 — Ironwood (TPU v7 / TPU7x) announced at Cloud Next. 4.6 PFLOPS FP8, 192 GiB HBM3e."/>
+            <circle cx="780" cy="80" r="6" class="dot tpu" data-info="Nov 2025 — Ironwood GA. 9216-chip pod, 42.5 ExaFLOPS aggregate FP8."/>
+            <!-- ML events y=170 -->
+            <circle cx="220" cy="170" r="6" class="dot ml" data-info="Mar 2016 — AlphaGo 4–1 vs Lee Sedol in Seoul. Served on TPU v1."/>
+            <circle cx="280" cy="170" r="6" class="dot ml" data-info="Jun 2017 — Transformer paper at NeurIPS (Vaswani et al.). The architectural ancestor of every later LLM."/>
+            <circle cx="335" cy="170" r="6" class="dot ml" data-info="Oct 2018 — BERT released. Trained on TPUs (v2/v3 era)."/>
+            <circle cx="455" cy="170" r="6" class="dot ml" data-info="May 2020 — GPT-3 (175B) by OpenAI on NVIDIA. TPU v4 deploying internally same year."/>
+            <circle cx="525" cy="170" r="6" class="dot ml" data-info="Apr 2022 — PaLM (540B) trained on two TPU v4 pods, 6144 chips, 50 days, via Pathways."/>
+            <circle cx="615" cy="170" r="6" class="dot ml" data-info="Dec 2023 — Gemini 1.0 announced; trained on TPU v4 / v5e."/>
+            <circle cx="685" cy="170" r="6" class="dot ml" data-info="Feb 2024 — Gemini 1.5 (1M context) on TPU v5p."/>
+            <circle cx="715" cy="170" r="6" class="dot ml" data-info="Dec 2024 — Gemini 2.0 trained on Trillium."/>
+            <circle cx="780" cy="170" r="6" class="dot ml" data-info="2025 — Gemini 2.5 inference on Ironwood."/>
+            <!-- Google papers y=260 -->
+            <circle cx="285" cy="260" r="6" class="dot goog" data-info="Jun 2017 — ISCA 2017: 'In-Datacenter Performance Analysis of a TPU' (Jouppi et al., 75 authors)."/>
+            <circle cx="465" cy="260" r="6" class="dot goog" data-info="Jul 2020 — CACM: 'A Domain-Specific Supercomputer for Training DNNs' (TPU v2/v3)."/>
+            <circle cx="525" cy="260" r="6" class="dot goog" data-info="Jun 2021 — ISCA 2021: 'Ten Lessons … Shaped Google's TPUv4i' (inference variant)."/>
+            <circle cx="585" cy="260" r="6" class="dot goog" data-info="Mar 2022 — MLSys 2022: 'Pathways' (Barham, Dean, Ghemawat). Single-controller multi-pod orchestration."/>
+            <circle cx="645" cy="260" r="6" class="dot goog" data-info="Jun 2023 — ISCA 2023: 'TPU v4: An Optically Reconfigurable Supercomputer for ML'. Palomar OCS disclosed."/>
+            <circle cx="640" cy="260" r="6" class="dot goog" data-info="Mar 2023 — OpenXLA spun out as a multi-vendor open-source project."/>
+        </svg>
+    </div>
+
+    <div id="tl-info" style="background: var(--bg-code); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 4px; padding: 0.75rem 1rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); margin-top: 0.75rem; min-height: 3rem;">Click any dot above to read what happened.</div>
+
+    <script>
+    (function(){
+        var svg = document.getElementById('tl-svg');
+        var info = document.getElementById('tl-info');
+        if (!svg || !info) return;
+        svg.querySelectorAll('.dot').forEach(function(d){
+            d.addEventListener('click', function(){
+                info.textContent = d.getAttribute('data-info') || '';
+            });
+        });
+    })();
+    </script>
+</section>
+
+<section class="slide" id="slide-12">
+    <div class="slide-number">12</div>
+    <h2>Cheat Sheet</h2>
+    <ul>
+        <li>The TPU programme begins in <strong>2013</strong> with Jeff Dean's voice-search projection that universal voice query would <em>double</em> Google's datacenter footprint on CPUs.</li>
+        <li>The lead architect is <strong>Norm Jouppi</strong>: Stanford-MIPS PhD under Hennessy, DEC WRL (victim cache, stream buffers, CACTI), HP Fellow, Eckert&ndash;Mauchly 2015. He brought four decades of memory-hierarchy and RISC-discipline thinking to the chip.</li>
+        <li>v1 went from spec to running production inference in <strong>~15 months</strong>, and from tested silicon to datacenter in <strong>22 days</strong>. A 28 nm PCIe card, ~12 instructions, no caches, no branch predictor.</li>
+        <li>The first big public workload was <strong>AlphaGo vs Lee Sedol</strong> (March 2016) on TPU v1.</li>
+        <li>Public announcement <strong>19 May 2016</strong> at Google I/O. Detailed disclosure at <strong>ISCA 2017</strong> (Jouppi et al., 75 authors). v2/v3 in <strong>CACM 2020</strong>; v4 + Palomar OCS in <strong>ISCA 2023</strong>.</li>
+        <li>From <strong>v5</strong> onward the line forks: <em>e-class</em> for cost-optimised inference / small training, <em>p-class</em> for the training flagship.</li>
+        <li>Today's chip, <strong>Ironwood (TPU v7)</strong>, ships <strong>4.6 PFLOPS FP8</strong> and <strong>192 GiB HBM3e</strong> per chip in a <strong>9,216-chip 3D-torus pod</strong>.</li>
+        <li>The architectural lineage: RISC compiler-discipline + Kung &amp; Leiserson systolic arrays + Jouppi-era software-managed memory hierarchy &mdash; finally finding a workload (deep matmul-heavy ML) that fits the shape.</li>
+    </ul>
+
+    <div class="callout">
+        <div class="callout-label">Read next</div>
+        <p>Deck <strong>02 &mdash; Generations Overview</strong> walks the spec sheet for every TPU from v1 to Ironwood; deck <strong>03 &mdash; Systolic Arrays</strong> opens up the 1978 Kung &amp; Leiserson lineage in detail; deck <strong>04 &mdash; Inside TPU v1</strong> takes the chip from this story apart slide by slide.</p>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>Part of the <a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Google_TPUs">Google TPUs</a> series &mdash; hub of the <a href="https://github.com/BrendanJamesLynskey/LLMs">LLMs</a> presentation index.</p>
+    <p style="margin-top: 0.4rem; font-size: 0.75rem;">Sources: Jouppi et al. ISCA 2017 (arXiv:1704.04760); CACM 2020 (10.1145/3360307); ISCA 2023 (arXiv:2304.01433); Google Cloud Blog "An in-depth look at the first TPU" (May 2016); Hennessy &amp; Patterson CACM 2019 Turing lecture.</p>
+</footer>
+
+</body>
+</html>
