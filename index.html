@@ -9,11 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0a; --bg-card: #0d1117; --bg-code: #161b22;
-            --text-primary: #e6edf3; --text-secondary: #8b949e;
-            --accent: #4285F4; --accent-dim: #4285F444; --accent-glow: #4285F433;
-            --accent-2: #EA4335; --accent-3: #FBBC04; --accent-4: #34A853;
-            --border: #21262d;
+            --bg-primary: #f3efe6; --bg-card: #ebe6da; --bg-code: #e2dcce;
+            --text-primary: #1b1a18; --text-secondary: #625c52;
+            --accent: #355ec6; --accent-dim: #355ec644; --accent-glow: #355ec61a;
+            --accent-2: #ee3218; --accent-3: #8b6a0d; --accent-4: #458f5d;
+            --border: #d0c9b8;
             --font-display: 'Space Grotesk', sans-serif;
             --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
             --font-body: 'Inter', sans-serif;
@@ -48,7 +48,7 @@
         th { background: var(--bg-code); color: var(--accent); font-weight: 600; text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-family: var(--font-display); white-space: nowrap; }
         td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
         tr:last-child td { border-bottom: none; }
-        tr:nth-child(even) td { background: rgba(13, 17, 23, 0.5); }
+        tr:nth-child(even) td { background: rgba(235,230,218,0.5); }
         .diagram-grid { display: grid; gap: 0.75rem; margin: 1.5rem 0; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
         .diagram-grid.cols-2 { grid-template-columns: 1fr 1fr; }
         .diagram-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
@@ -504,16 +504,16 @@
     <div class="canvas-wrap">
         <svg id="tl-svg" viewBox="0 0 860 360" width="860" height="360" xmlns="http://www.w3.org/2000/svg">
             <style>
-                .ax { stroke: #21262d; stroke-width: 1; }
-                .gr { stroke: #161b22; stroke-dasharray: 2,3; }
-                .yr { fill: #8b949e; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
-                .lbl { fill: #e6edf3; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+                .ax { stroke: #d0c9b8; stroke-width: 1; }
+                .gr { stroke: #e2dcce; stroke-dasharray: 2,3; }
+                .yr { fill: #625c52; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+                .lbl { fill: #1b1a18; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
                 .dot { cursor: pointer; transition: r 0.15s; }
                 .dot:hover { r: 8; }
-                .dot.tpu { fill: #4285F4; stroke: #4285F4; }
-                .dot.ml  { fill: #FBBC04; stroke: #FBBC04; }
-                .dot.goog{ fill: #34A853; stroke: #34A853; }
-                .legend { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: #e6edf3; }
+                .dot.tpu { fill: #355ec6; stroke: #355ec6; }
+                .dot.ml  { fill: #8b6a0d; stroke: #8b6a0d; }
+                .dot.goog{ fill: #458f5d; stroke: #458f5d; }
+                .legend { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: #1b1a18; }
             </style>
             <!-- axis -->
             <line x1="40" y1="320" x2="820" y2="320" class="ax"/>
