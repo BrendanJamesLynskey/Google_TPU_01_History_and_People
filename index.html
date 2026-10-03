@@ -183,7 +183,7 @@
             <ul>
                 <li>Xeon Ivy Bridge / Haswell &mdash; about <strong>200 GFLOPS FP32</strong> per socket, ~150 W.</li>
                 <li>General-purpose &mdash; pays for branch predictors, out-of-order, large caches, all dark silicon for matmul.</li>
-                <li>Software flexibility was great; <strong>perf/W on dense matmul was ~0.3 GFLOPS/W</strong>.</li>
+                <li>Software flexibility was great; <strong>perf/W on dense matmul was ~1.3 GFLOPS/W</strong>.</li>
             </ul>
         </div>
         <div class="diagram-panel g">
@@ -202,7 +202,7 @@
 
     <div class="callout">
         <div class="callout-label">Domain-specific architecture</div>
-        <p>This is the moment the term <em>domain-specific architecture</em> (DSA) starts to matter at hyperscale. Patterson and Hennessy's 2017 Turing-lecture paper "A New Golden Age for Computer Architecture" uses the TPU as the canonical example: <strong>when Moore's-law and Dennard scaling slow, the way out is specialised silicon for the workloads that dominate your fleet</strong>. Google's fleet was dominated by inference of a small set of model topologies. That's the ideal DSA target.</p>
+        <p>This is the moment the term <em>domain-specific architecture</em> (DSA) starts to matter at hyperscale. Patterson and Hennessy's 2018 Turing lecture (CACM 2019) "A New Golden Age for Computer Architecture" uses the TPU as the canonical example: <strong>when Moore's-law and Dennard scaling slow, the way out is specialised silicon for the workloads that dominate your fleet</strong>. Google's fleet was dominated by inference of a small set of model topologies. That's the ideal DSA target.</p>
     </div>
 </section>
 
@@ -259,7 +259,7 @@
         <div>
             <h4>Jeff Dean</h4>
             <div class="role">Project sponsor &middot; Senior Fellow &middot; Google Brain co-founder</div>
-            <p>The voice-search projection was his. Co-founded Google Brain (2011) with Andrew Ng and Greg Corrado; pushed for and underwrote the TPU programme internally. Co-author on ISCA 2017. More recently: lead author on the <em>Pathways</em> system that orchestrates pod-spanning training.</p>
+            <p>The voice-search projection was his. Co-founded Google Brain (2011) with Andrew Ng and Greg Corrado; pushed for and underwrote the TPU programme internally. Co-author on ISCA 2017. More recently: co-author on the <em>Pathways</em> system that orchestrates pod-spanning training.</p>
         </div>
     </div>
 
@@ -292,7 +292,7 @@
 
     <div class="callout">
         <div class="callout-label">Note on the Quoc Le myth</div>
-        <p>Quoc Le, the Brain co-founder famous for the "neural cat detector", is sometimes credited with the TPU. He is not on any of the TPU papers and was not on the hardware team &mdash; he is on the ML-research side that <em>motivated</em> the chip. Worth being precise: TPU = a hardware-team artefact, prompted by a Brain-team need.</p>
+        <p>Quoc Le, the Brain researcher famous for the "neural cat detector", is sometimes credited with the TPU. He is not on any of the TPU papers and was not on the hardware team &mdash; he is on the ML-research side that <em>motivated</em> the chip. Worth being precise: TPU = a hardware-team artefact, prompted by a Brain-team need.</p>
     </div>
 </section>
 
@@ -302,7 +302,7 @@
     <p>The most surprising number in the entire TPU story is the schedule. The May 2016 Cloud blog post by Jouppi, written immediately after the public announcement, gives the only numbers Google has ever published on the design cycle:</p>
 
     <div class="quote">
-        We've been running TPUs inside our data centers for more than a year, and have found them to deliver an order of magnitude better-optimized performance per watt for machine learning. &hellip; The first tested silicon was deployed in our datacenters within 22 days.
+        We've been running TPUs inside our data centers for more than a year, and have found them to deliver an order of magnitude better-optimized performance per watt for machine learning. &hellip; TPU is an example of how fast we turn research into practice &mdash; from first tested silicon, the team had them up and running applications at speed in our data centers within 22 days.
         <span class="attr">&mdash; Norm Jouppi, Google Cloud Blog, 19 May 2016</span>
     </div>
 
@@ -316,7 +316,7 @@
         <div class="tl-row"><div class="tl-year">2016-05-19</div><div class="tl-event"><strong>Public announcement.</strong><p>Sundar Pichai keynote at Google I/O; Jouppi's blog post the same day.</p></div></div>
     </div>
 
-    <p>For comparison: a typical big-vendor AI accelerator from spec to general availability is closer to <strong>3&ndash;4 years</strong>. NVIDIA's Volta announcement (March 2017) traces back to architecture work started around 2013. The TPU did the same job &mdash; and shipped to a production datacenter &mdash; in less than half the time.</p>
+    <p>For comparison: a typical big-vendor AI accelerator from spec to general availability is closer to <strong>3&ndash;4 years</strong>. NVIDIA's Volta V100 announcement (May 2017) traces back to architecture work started around 2013. The TPU did the same job &mdash; and shipped to a production datacenter &mdash; in less than half the time.</p>
 
     <div class="callout">
         <div class="callout-label">How is that even possible?</div>
@@ -401,7 +401,7 @@
         <table>
             <thead><tr><th>Paper</th><th>Venue</th><th>Year</th><th>What it covers</th></tr></thead>
             <tbody>
-                <tr><td><strong>In-Datacenter Performance Analysis of a Tensor Processing Unit</strong><br>Jouppi, Young, Patil, Patterson &hellip; (75 authors)</td><td>ISCA</td><td>2017</td><td>The TPU v1 disclosure paper. 28&nbsp;nm, 256&times;256 INT8 systolic, 92 TOPS, 28 W typical, 40 W max. Roofline analysis showing v1 was memory-bandwidth-bound &mdash; the lesson that motivated HBM in v2.</td></tr>
+                <tr><td><strong>In-Datacenter Performance Analysis of a Tensor Processing Unit</strong><br>Jouppi, Young, Patil, Patterson &hellip; (75 authors)</td><td>ISCA</td><td>2017</td><td>The TPU v1 disclosure paper. 28&nbsp;nm, 256&times;256 INT8 systolic, 92 TOPS, 28 W idle, 40 W busy, 75 W TDP. Roofline analysis showing v1 was memory-bandwidth-bound &mdash; the lesson that motivated HBM in v2.</td></tr>
                 <tr><td><strong>A Domain-Specific Supercomputer for Training Deep Neural Networks</strong><br>Jouppi, Yoon, Kurian, Li, Patil, Laudon, Young, Patterson</td><td>CACM</td><td>2020</td><td>TPU v2 and v3. Why training needed a new chip (no FP, no gradients in v1). bfloat16, two TensorCores per chip, 2D-torus pod, ICI custom interconnect.</td></tr>
                 <tr><td><strong>TPU v4: An Optically Reconfigurable Supercomputer for ML with Hardware Support for Embeddings</strong><br>Jouppi, Kurian, Li, &hellip; Patterson</td><td>ISCA</td><td>2023</td><td>The 4096-chip v4 pod. 7&nbsp;nm, 3D torus, the <em>Palomar</em> 3D-MEMS optical circuit switch, SparseCore for embeddings. The "ML supercomputer" framing.</td></tr>
             </tbody>
@@ -437,7 +437,7 @@
                 <tr><td><strong>v4</strong></td><td>2020 (announced 2021)</td><td>Training flagship</td><td>7&nbsp;nm, 3D torus, Palomar OCS, SparseCore, CMEM</td></tr>
                 <tr><td><strong>v4i</strong></td><td>2020</td><td>Inference</td><td>Single-core variant of v4 for fleet inference</td></tr>
                 <tr><td><strong>v5e</strong></td><td>Aug 2023</td><td>Cost-optimised</td><td>The "e-class" inference / small-training chip</td></tr>
-                <tr><td><strong>v5p</strong></td><td>Dec 2023</td><td>Training flagship</td><td>95 GiB HBM, 8,960-chip pod, Gemini 1/1.5 training</td></tr>
+                <tr><td><strong>v5p</strong></td><td>Dec 2023</td><td>Training flagship</td><td>95 GiB HBM, 8,960-chip pod</td></tr>
                 <tr><td><strong>Trillium (v6e)</strong></td><td>May 2024 / GA Dec 2024</td><td>Cost-optimised</td><td>4.7&times; v5e compute, 3rd-gen SparseCore</td></tr>
                 <tr><td><strong>Ironwood (v7 / TPU7x)</strong></td><td>Apr 2025 / GA Nov 2025</td><td>Inference flagship</td><td>4.6 PFLOPS FP8, 192 GiB HBM3e, 9,216-chip pod</td></tr>
             </tbody>
@@ -621,7 +621,7 @@
 
 <footer class="footer">
     <p>Part of the <a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Google_TPUs">Google TPUs</a> series &mdash; hub of the <a href="https://github.com/BrendanJamesLynskey/LLMs">LLMs</a> presentation index.</p>
-    <p style="margin-top: 0.4rem; font-size: 0.75rem;">Sources: Jouppi et al. ISCA 2017 (arXiv:1704.04760); CACM 2020 (10.1145/3360307); ISCA 2023 (arXiv:2304.01433); Google Cloud Blog "An in-depth look at the first TPU" (May 2016); Hennessy &amp; Patterson CACM 2019 Turing lecture.</p>
+    <p style="margin-top: 0.4rem; font-size: 0.75rem;">Sources: Jouppi et al. ISCA 2017 (arXiv:1704.04760); CACM 2020 (10.1145/3360307); ISCA 2023 (arXiv:2304.01433); Google Cloud Blog "Google supercharges machine learning tasks with TPU custom chip" (19 May 2016) and "An in-depth look at Google's first Tensor Processing Unit" (2017); Hennessy &amp; Patterson CACM 2019 Turing lecture.</p>
 </footer>
 
 </body>
